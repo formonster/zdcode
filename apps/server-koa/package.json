@@ -1,0 +1,45 @@
+{
+  "name": "server-koa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev tsnd ./src/index.ts",
+    "start": "pm2 start ecosystem.config.js --env prod",
+    "stop": "pm2 stop ecosystem.config.js",
+    "restart": "pm2 restart ecosystem.config.js",
+    "del": "pm2 delete koa-server",
+    "log": "pm2 monit",
+    "build": "yarn clean && tsc",
+    "clean": "rm -rf ./dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "@koa/router": "^12.0.0",
+    "awilix": "^8.0.0",
+    "awilix-koa": "^9.0.0",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
+    "react": "^18.2.0",
+    "react-dom": "18.2.0",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig": "workspace:0.0.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.5",
+    "@types/koa-bodyparser": "^4.3.10",
+    "@types/koa-cors": "^0.0.2",
+    "@types/koa__cors": "^3.3.0",
+    "@types/koa__router": "^12.0.0",
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  }
+}
