@@ -12,8 +12,15 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "http://43.143.167.128:4000/"
+  },
   "dependencies": {
     "@zdcode/tsconfig": "workspace:^0.0.0",
+    "formidable": "^2.1.1",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
