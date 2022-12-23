@@ -10,6 +10,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "files": ["dist", "src"],
+  "publishConfig": {
+    "registry": "http://43.143.167.128:4000/"
+  },
   "dependencies": {
     "lodash": "^4.17.21"
   },

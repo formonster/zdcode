@@ -13,7 +13,12 @@
   "author": "",
   "license": "ISC",
   "bin": {
+    "zdcode": "./dist/index.mjs",
     "zd": "./dist/index.mjs"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "registry": "http://43.143.167.128:4000/"
   },
   "dependencies": {
     "@zdcode/template": "workspace:^1.0.0",
