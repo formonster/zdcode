@@ -37,7 +37,5 @@ export const format = (str: string, params: Record<string, string>): string => {
     str = str.replace(new RegExp(content.replace('$', '\\$').replace('{', '\\{').replace('}', '\\}').replace('|', '\\|'), 'g'), res)
   })
 
-  console.log('str', str);
-
   return str
 }

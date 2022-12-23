@@ -1,0 +1,16 @@
+# @zdcode/utils
+
+## 2.0.0
+
+### Major Changes
+
+- 发版
+- 发版
+- 发版
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @zdcode/tsconfig@1.0.0

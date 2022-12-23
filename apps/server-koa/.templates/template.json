@@ -1,0 +1,27 @@
+[
+  {
+    "name": "server-module",
+    "params": ["moduleName"],
+    "root": "./src/modules",
+    "templates": [
+      {
+        "name": "$T{moduleName}",
+        "type": "dir",
+        "files": [
+          {
+            "name": "$T{F|moduleName}Controller.ts",
+            "template": "./server-module/controller.tpl"
+          },
+          {
+            "name": "$T{F|moduleName}Interface.ts",
+            "template": "./server-module/interface.tpl"
+          },
+          {
+            "name": "$T{F|moduleName}Service.ts",
+            "template": "./server-module/controller.tpl"
+          }
+        ]
+      }
+    ]
+  }
+]

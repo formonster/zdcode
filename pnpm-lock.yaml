@@ -56,6 +56,7 @@ importers:
       '@types/node': ^18.11.9
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.9
+      '@zdcode/cli': workspace:^1.0.0
       '@zdcode/superdb': workspace:^1.0.0
       '@zdcode/tsconfig': workspace:*
       '@zdcode/utils': workspace:^1.0.0
@@ -75,6 +76,7 @@ importers:
     dependencies:
       '@koa/cors': 4.0.0
       '@koa/router': 12.0.0
+      '@zdcode/cli': link:../../packages/cli
       '@zdcode/superdb': link:../../packages/superdb
       '@zdcode/tsconfig': link:../../packages/tsconfig
       '@zdcode/utils': link:../../packages/utils
@@ -377,6 +379,7 @@ importers:
 
   packages/utils:
     specifiers:
+      '@types/formidable': ^2.0.5
       '@types/lodash': ^4.14.191
       '@types/node': ^18.11.15
       '@zdcode/tsconfig': workspace:^0.0.0
@@ -389,6 +392,7 @@ importers:
       formidable: 2.1.1
       lodash: 4.17.21
     devDependencies:
+      '@types/formidable': 2.0.5
       '@types/lodash': 4.14.191
       '@types/node': 18.11.15
       tsup: 6.5.0_typescript@4.9.4
@@ -4564,6 +4568,12 @@ packages:
       '@types/express-serve-static-core': 4.17.31
       '@types/qs': 6.9.7
       '@types/serve-static': 1.15.0
+    dev: true
+
+  /@types/formidable/2.0.5:
+    resolution: {integrity: sha512-uvMcdn/KK3maPOaVUAc3HEYbCEhjaGFwww4EsX6IJfWIJ1tzHtDHczuImH3GKdusPnAAmzB07St90uabZeCKPA==}
+    dependencies:
+      '@types/node': 18.11.15
     dev: true
 
   /@types/glob/7.2.0:

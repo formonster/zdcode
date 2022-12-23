@@ -4,7 +4,10 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "license": "MIT",
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "publishConfig": {
     "registry": "http://43.143.167.128:4000/"
   },

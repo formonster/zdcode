@@ -1,8 +1,8 @@
 {
   "name": "server-koa",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "private": true,
   "description": "",
-  "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=dev tsnd ./src/index.ts",
     "start": "pm2 start ecosystem.config.js --env prod",
@@ -11,7 +11,8 @@
     "del": "pm2 delete koa-server",
     "log": "pm2 monit",
     "build": "yarn clean && tsc",
-    "clean": "rm -rf ./dist"
+    "clean": "rm -rf ./dist",
+    "template": "zdcode template"
   },
   "keywords": [],
   "author": "",
@@ -19,9 +20,10 @@
   "dependencies": {
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",
-    "@zdcode/tsconfig": "workspace:*",
+    "@zdcode/cli": "workspace:^2.0.0",
     "@zdcode/superdb": "workspace:^1.0.0",
-    "@zdcode/utils": "workspace:^1.0.0",
+    "@zdcode/tsconfig": "workspace:*",
+    "@zdcode/utils": "workspace:^2.0.0",
     "awilix": "^8.0.0",
     "awilix-koa": "^9.0.0",
     "knex": "^2.3.0",

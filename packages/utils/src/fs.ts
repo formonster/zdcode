@@ -25,7 +25,7 @@ export const checkExist = (path: string) => {
 }
 export type CreateDirOption = {
   // 基础路径，默认肯定存在，不会进行检测
-  basePath: string
+  basePath?: string
 }
 
 export const writeFile = async (path: string, content: string, basePath?: string) => {
@@ -55,9 +55,11 @@ export const createDir = async (path: string, options?: CreateDirOption) => {
       try {
           if (!isExist) fs.mkdirSync(fullPath)
       } catch (error) {
-          if (error && error.message && !error.message.includes('file already exists')) {
-              throw new Error(error)
-          }
+        // @ts-ignore
+        if (error && error.message && !error.message.includes('file already exists')) {
+          // @ts-ignore
+            throw new Error(error)
+        }
       } finally {
           basePath = fullPath
       }
@@ -74,20 +76,21 @@ export const createFile = async (path: string, file: File, basePath?: string) =>
   await createDir(dirPath, { basePath })
 
   return new Promise((resolve, reject) => {
-      const render = fs.createReadStream(file.path);
-      const upStream = fs.createWriteStream(path);
-      render.pipe(upStream);
+    // @ts-ignore
+    const render = fs.createReadStream(file.path);
+    const upStream = fs.createWriteStream(path);
+    render.pipe(upStream);
 
-      let errFlag = false;
-      upStream.on('error', err => {
-          errFlag = true;
-          upStream.destroy();
-          reject(err);
-      })
-      upStream.on('finish', () => {
-          if (errFlag) return;
-          resolve("finish")
-          upStream.close();
-      })
+    let errFlag = false;
+    upStream.on('error', err => {
+        errFlag = true;
+        upStream.destroy();
+        reject(err);
+    })
+    upStream.on('finish', () => {
+        if (errFlag) return;
+        resolve("finish")
+        upStream.close();
+    })
   });
 }

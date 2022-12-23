@@ -32,7 +32,17 @@ program
         paramsData[param] = value
       }
     }
-    createTemplates(root, templates, paramsData)
+
+    console.log('')
+    console.log('🐳', chalk.gray('开始生成模板文件'))
+    console.log('')
+
+    await createTemplates(root, templates, paramsData)
+    
+    console.log('')
+    console.log('🐳', chalk.green('success!'))
+    console.log('')
+
   })
 }
 
