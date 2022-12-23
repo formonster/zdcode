@@ -1,0 +1,1 @@
+export type TableName = "enums" | "enums_item" | "table_column" | "tables"

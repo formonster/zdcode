@@ -12,7 +12,9 @@ export const initRouter = (app: Koa<Koa.DefaultState, Koa.DefaultContext>) => {
   const container = createContainer()
   // 加载 Service 模块
   container.loadModules(
-    IS_BUILD_ENV ? [`${root}/modules/**/*Service.js`] : [`${root}/modules/**/*Service.ts`, `${root}/modules/**/*Service.tsx`],
+    IS_BUILD_ENV
+      ? [`${root}/modules/**/*Service.js`]
+      : [`${root}/modules/**/*Service.ts`, `${root}/modules/**/*Service.tsx`],
     {
       // 定义命名方式：驼峰形式
       formatName: 'camelCase',
@@ -28,12 +30,9 @@ export const initRouter = (app: Koa<Koa.DefaultState, Koa.DefaultContext>) => {
   // 加载路由
   app.use(
     IS_BUILD_ENV
-      ? loadControllers(
-      `${root}/modules/**/*Controller.js`,
-      )
+      ? loadControllers(`${root}/modules/**/*Controller.js`)
       : loadControllers(
-        `${root}/modules/**/*Controller.ts`,
-        `${root}/modules/**/*Controller.tsx`
-      )
+          `${root}/modules/**/*Controller.ts`
+        )
   )
 }

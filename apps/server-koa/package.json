@@ -19,14 +19,18 @@
   "dependencies": {
     "@koa/cors": "^4.0.0",
     "@koa/router": "^12.0.0",
+    "@zdcode/tsconfig": "workspace:*",
+    "@zdcode/superdb": "workspace:^1.0.0",
+    "@zdcode/utils": "workspace:^1.0.0",
     "awilix": "^8.0.0",
     "awilix-koa": "^9.0.0",
+    "knex": "^2.3.0",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
+    "mysql2": "^2.3.3",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
-    "ts-node-dev": "^2.0.0",
-    "tsconfig": "workspace:0.0.0"
+    "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
     "@types/koa": "^2.13.5",

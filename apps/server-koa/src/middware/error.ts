@@ -11,9 +11,10 @@ const errorHandler = async (ctx: Router.RouterContext, next: () => Promise<unkno
             ctx.body = "404";
         }
     } catch (error: any) {
-
         ctx.status = error.status || 500;
         console.log("💥", error);
+        console.log("💥 QUERY", ctx.query);
+        console.log("💥 BODY", ctx.request.body);
 
         if (error.isAxiosError) {
             console.error("💥", error.response.data);

@@ -1,0 +1,32 @@
+.titaui-super-table-box {
+  position: relative;
+  box-sizing: border-box;
+  height: 40px;
+  background-color: #fff;
+
+  &__box-container {
+    position: relative;
+    height: 100%;
+
+    &--hidden {
+      width: 0;
+    }
+  }
+  &__full-content {
+    padding-right: 1px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+  &__content {
+    padding: 8px 12px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+  &--active {
+    background-color: rgba(40, 121, 255, 0.1);
+  }
+}

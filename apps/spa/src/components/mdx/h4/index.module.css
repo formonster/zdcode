@@ -1,0 +1,16 @@
+.mdx-h4 {
+  position: relative;
+  font-weight: bold;
+}
+.mdx-h4:hover:before {
+  opacity: 1;
+}
+.mdx-h4::before {
+  content: '#4';
+  position: absolute;
+  left: -10px;
+  color: #ccc;
+  opacity: 0;
+  transition: opacity 0.3s;
+  transform: translateX(-100%);
+}

@@ -1,0 +1,6 @@
+.mdx-a {
+  color: rgba(66, 170, 255, 0.803);
+}
+.mdx-a:hover {
+  color: rgb(66, 170, 255);
+}

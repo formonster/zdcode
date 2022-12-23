@@ -1,0 +1,4 @@
+.mdx-li::marker {
+  color: rgb(66, 170, 255);
+  font-weight: 400;
+}
