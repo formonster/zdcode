@@ -1,17 +1,15 @@
-export function upperFirstLetter(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-export function lowerFirstLetter(str) {
-  return str.charAt(0).toLowerCase() + str.slice(1);
-}
+import { humpToChain, lowerFirstLetter, upperFirstLetter } from "@zdcode/utils";
 
 export const formatFuns = {
   F: upperFirstLetter,
-  f: lowerFirstLetter
+  f: lowerFirstLetter,
+  '-': humpToChain
 }
 
+export const replace = (str: string, target: string, value: string) => str.replace(new RegExp(target.replace('$', '\\$').replace('{', '\\{').replace('}', '\\}').replace('|', '\\|'), 'g'), value)
+
 export const format = (str: string, params: Record<string, string>): string => {
-  let items: string[] = str.match(/(\$T\{)([A-Za-z | _])+(\})/g)
+  let items: string[] = str.match(/(\$T\{)([A-Za-z|_|:|-])+(\})/g)
   if (!items) return str
 
   // 去重
@@ -28,13 +26,15 @@ export const format = (str: string, params: Record<string, string>): string => {
 
   options.forEach(({ content, formats, name }) => {
     const value = params[name]
+    if (!value) return
+
     let res = value
     for (const format of formats) {
       if (formatFuns[format]) {
         res = formatFuns[format](res)
       }
     }
-    str = str.replace(new RegExp(content.replace('$', '\\$').replace('{', '\\{').replace('}', '\\}').replace('|', '\\|'), 'g'), res)
+    str = replace(str, content, res)
   })
 
   return str

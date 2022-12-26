@@ -24,3 +24,16 @@ export const input = async (title: string) => {
 
   return action
 }
+
+export const confirm = async (title: string, defaultValue?: boolean) => {
+  const { action } = await inquirer.prompt([
+    {
+      name: 'action',
+      type: 'confirm',
+      message: title,
+      default: defaultValue
+    },
+  ])
+
+  return action
+}

@@ -22,4 +22,15 @@ declare const getPromiseData: <T extends unknown>(func: Promise<T>) => Promise<[
 declare const getSettledData: <T>(result: PromiseSettledResult<T>, throwError?: boolean) => any[];
 declare const getAllSettledPromiseData: <T>(promiseSettledResult: PromiseSettledResult<T>[], throwError?: boolean) => any[][];
 
-export { CreateDirOption, arr2Dic, checkExist, createDir, createFile, flattenDeepByField, getAllSettledPromiseData, getProjectFile, getProjectJsonFile, getPromiseData, getSettledData, mapFields, sortAsc, sortDesc, writeFile };
+declare const isUpperCase: (str: string) => boolean;
+declare const isLowerCase: (str: string) => boolean;
+
+declare function upperFirstLetter(str: string): string;
+declare function lowerFirstLetter(str: string): string;
+/**
+ * 将驼峰形式的字符串转为链式的
+ * @param str 字符串
+ */
+declare const humpToChain: (str: string) => string;
+
+export { CreateDirOption, arr2Dic, checkExist, createDir, createFile, flattenDeepByField, getAllSettledPromiseData, getProjectFile, getProjectJsonFile, getPromiseData, getSettledData, humpToChain, isLowerCase, isUpperCase, lowerFirstLetter, mapFields, sortAsc, sortDesc, upperFirstLetter, writeFile };

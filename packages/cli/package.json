@@ -1,6 +1,6 @@
 {
   "name": "@zdcode/cli",
-  "version": "2.0.0",
+  "version": "2.2.1",
   "description": "",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -23,7 +23,7 @@
     "registry": "http://43.143.167.128:4000/"
   },
   "dependencies": {
-    "@zdcode/template": "workspace:^2.0.0",
+    "@zdcode/template": "workspace:^2.2.1",
     "@zdcode/tsconfig": "workspace:^1.0.0",
     "commander": "^9.4.1",
     "lodash": "^4.17.21",

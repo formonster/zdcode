@@ -1,6 +1,6 @@
 {
   "name": "@zdcode/template",
-  "version": "2.0.0",
+  "version": "2.2.1",
   "description": "",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@zdcode/tsconfig": "workspace:^1.0.0",
-    "@zdcode/utils": "workspace:^2.0.0",
+    "@zdcode/utils": "workspace:^2.1.0",
     "chalk": "^5.2.0",
     "commander": "^9.4.1",
     "inquirer": "^9.1.4",

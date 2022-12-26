@@ -1,3 +1,5 @@
 export * from './array'
 export * from './fs'
 export * from './promise'
+export * from './string'
+export * from './format'

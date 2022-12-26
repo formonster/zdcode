@@ -1,7 +1,7 @@
 import { Command } from 'commander'
 import chalk from 'chalk'
 import { getProjectJsonFile } from '@zdcode/utils'
-import { input, selectList } from './inquirer'
+import { confirm, input, selectList } from './inquirer'
 import { TemplateOption } from './type'
 import { createTemplates } from './templates'
 
@@ -28,8 +28,25 @@ program
     const paramsData: Record<string, string> = {}
     if (params.length) {
       for (const param of params) {
-        const value = await input(`请输入 ${param}:`)
-        paramsData[param] = value
+        if (typeof param === 'string') {
+          const value = await input(`请输入 ${param}:`)
+          paramsData[param] = value
+        }
+        if (Array.isArray(param)) {
+          const [name, option] = param
+          if (typeof option === 'string') {
+            const type = option;
+            if (type === 'boolean') {
+              const value = await confirm(`${name}?`)
+              paramsData[name] = value
+            }
+          }
+          if (Array.isArray(option)) {
+            const selectOptions = option;
+            const value = await selectList(`请选择 ${name}`, selectOptions.map((name) => ({ name, value: name })))
+            paramsData[name] = value
+          }
+        }
       }
     }
 
