@@ -34,6 +34,7 @@ export const createTemplates = async (root: string, templates: Template[], param
         const newContent = replace(replaceFileContent, `// $T{${replaceTarget}}`, `// $T{${replaceTarget}}\n${format(templateContent, params)}`)
         fs.writeFileSync(replaceFilePath, newContent, 'utf8');
       }
+      console.log('🎉', chalk.blue('replace'), chalk.gray(replaceFilePath))
     }
 
     // 处理文件
@@ -43,7 +44,7 @@ export const createTemplates = async (root: string, templates: Template[], param
       const formatTemplateContent = format(templateContent, params)
       // @ts-ignore
       await writeFile(path.resolve(process.cwd(), filePath), formatTemplateContent)
-      console.log('🎉', chalk.gray(filePath))
+      console.log('🎉', chalk.blue('create '), chalk.gray(filePath))
     }
   }
 }

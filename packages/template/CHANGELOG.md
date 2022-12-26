@@ -1,5 +1,11 @@
 # @zdcode/template
 
+## 2.2.2
+
+### Patch Changes
+
+- 优化输出
+
 ## 2.2.1
 
 ### Patch Changes

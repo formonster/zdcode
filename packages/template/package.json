@@ -1,6 +1,6 @@
 {
   "name": "@zdcode/template",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
