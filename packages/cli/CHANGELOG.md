@@ -1,5 +1,11 @@
 # @zdcode/cli
 
+## 2.2.3
+
+### Patch Changes
+
+- 增加 tita 指令
+
 ## 2.2.2
 
 ### Patch Changes

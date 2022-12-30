@@ -313,8 +313,10 @@ importers:
   packages/superdb:
     specifiers:
       '@types/lodash': ^4.14.191
+      '@zdcode/fetch': workspace:^1.0.0
       lodash: ^4.17.21
     dependencies:
+      '@zdcode/fetch': link:../fetch
       lodash: 4.17.21
     devDependencies:
       '@types/lodash': 4.14.191

@@ -1,6 +1,6 @@
 {
   "name": "@zdcode/cli",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "bin": {
+    "tita": "./dist/index.mjs",
     "zdcode": "./dist/index.mjs",
     "zd": "./dist/index.mjs"
   },
