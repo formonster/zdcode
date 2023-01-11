@@ -1,10 +1,45 @@
-import useSWR from 'swr'
-import fetch from '@/utils/fetch'
-import { Table } from '.'
+import { useState, useEffect } from 'react'
+import { list, work } from '.'
 
-export const useTables = () => useSWR<Table[]>('useTables', async () => {
-  const tableRes = await fetch.list<Table>({
-    table: 'tables',
-  })
-  return tableRes.data
-})
+export const useTables = () => {
+  const [tables, setTables] = useState([])
+  useEffect(() => {
+    list('tables').then(res => {
+      setTables(res.data || [])
+    })
+  }, [])
+  return tables
+}
+
+export const createTable = (name: string, title: string) => {
+  return work([
+    {
+      type: 'createTable',
+      name,
+    },
+    {
+      type: 'add',
+      table: 'tables',
+      data: {
+        name,
+        title
+      }
+    }
+  ])
+}
+
+export const removeTable = (name: string) => {
+  return work([
+    {
+      type: 'removeTable',
+      name,
+    },
+    {
+      type: 'remove',
+      table: 'tables',
+      where: {
+        name
+      }
+    }
+  ])
+}

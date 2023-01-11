@@ -10,12 +10,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "publishConfig": {
     "registry": "http://43.143.167.128:4000/"
   },
   "dependencies": {
-    "lodash": "^4.17.21"
+    "@zdcode/fetch": "workspace:^1.0.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191"
