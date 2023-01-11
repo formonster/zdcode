@@ -26,12 +26,10 @@ class IndexController {
   @route('/api/init')
   @GET()
   async init(ctx: Router.RouterContext) {
-    // 创建预设表
-    await Promise.allSettled(
-      presetTable.map(({ name, title, is_original, columns }) => {
-        return this.baseService.createTable(name, columns)
-      })
-    )
+    // 创建预设表（这里需要保证创建顺序）
+    for (const { name, columns } of presetTable) {
+      await this.baseService.createTable(name, columns)
+    }
 
     // 填充预设表的数据
     const tableStartId = await this.baseService.add({
@@ -44,6 +42,60 @@ class IndexController {
       // @ts-ignore
       data: columns?.map((column) => ({ table_id: tableStartId + i, ...column }))
     })))
+    
+    const enumId = await this.baseService.add({
+      table: 'enums',
+      data: {
+        name: 'ColumnType',
+        title: '列类型',
+      }
+    })
+    
+    await this.baseService.add({
+      table: 'enums_item',
+      data: [
+        {
+          enum_id: enumId,
+          name: 'RELATION',
+          title: 'RELATION'
+        },
+        {
+          enum_id: enumId,
+          name: 'INT',
+          title: 'INT'
+        },
+        {
+          enum_id: enumId,
+          name: 'CHAR',
+          title: 'CHAR'
+        },
+        {
+          enum_id: enumId,
+          name: 'VARCHAR',
+          title: 'VARCHAR'
+        },
+        {
+          enum_id: enumId,
+          name: 'TEXT',
+          title: 'TEXT'
+        },
+        {
+          enum_id: enumId,
+          name: 'BOOLEAN',
+          title: 'BOOLEAN'
+        },
+        {
+          enum_id: enumId,
+          name: 'UUID',
+          title: 'UUID'
+        },
+        {
+          enum_id: enumId,
+          name: 'ENUM',
+          title: 'ENUM'
+        },
+      ]
+    })
 
     ctx.body = resSuccess(true)
   }

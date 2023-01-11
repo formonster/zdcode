@@ -9,6 +9,7 @@ import { store } from '@/store'
 import Popup from '@/features/popup'
 import { component } from '@/components/mdx'
 import routes from './routes'
+import 'antd/dist/antd.min.css'
 import './index.css'
 import './reset.css'
 

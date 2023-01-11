@@ -1,8 +1,9 @@
 import { GET, POST, route } from 'awilix-koa'
 import Router from '@koa/router'
-import { GetProps, IBaseService } from './BaseInterface'
+import { IBaseService, Work } from './BaseInterface'
 import { resSuccess } from '../../utils/common'
-import { Column, Table } from '@zdcode/superdb'
+import { AddProps, Column, DelProps, GetProps, Table } from '@zdcode/superdb'
+import { TableName } from 'types/table'
 
 @route('/api')
 class BaseController {
@@ -13,24 +14,40 @@ class BaseController {
   @route('/:table/get')
   @POST()
   async get(ctx: Router.RouterContext) {
-    const { table } = ctx.params
+    const { table } = ctx.params as { table: TableName }
     const datas = ctx.request.body as GetProps;
-    const res = await this.baseService.get(datas)
+    const res = await this.baseService.get({ ...datas, table })
     ctx.body = resSuccess(res)
   }
   @route('/:table/list')
   @POST()
   async list(ctx: Router.RouterContext) {
-    const { table } = ctx.params
+    const { table } = ctx.params as { table: TableName }
     const datas = ctx.request.body as GetProps;
-    const res = await this.baseService.list(datas)
+    const res = await this.baseService.list({ ...datas, table })
     ctx.body = resSuccess(res)
   }
-  @route('/:table/addTables')
+  @route('/:table/add')
   @POST()
-  async addTables(ctx: Router.RouterContext) {
-    const { table, columns } = ctx.request.body as { table: Table, columns: Column[] };
-    const res = await this.baseService.addTables(table, columns)
+  async add(ctx: Router.RouterContext) {
+    const { table } = ctx.params as { table: TableName }
+    const datas = ctx.request.body as AddProps;
+    const res = await this.baseService.add({ ...datas, table })
+    ctx.body = resSuccess(res)
+  }
+  @route('/:table/remove')
+  @POST()
+  async remove(ctx: Router.RouterContext) {
+    const { table } = ctx.params as { table: TableName }
+    const datas = ctx.request.body as DelProps;
+    const res = await this.baseService.remove({ ...datas, table })
+    ctx.body = resSuccess(res)
+  }
+  @route('/base/work')
+  @POST()
+  async work(ctx: Router.RouterContext) {
+    const works = ctx.request.body as Work[];
+    const res = await this.baseService.work(works)
     ctx.body = resSuccess(res)
   }
 }

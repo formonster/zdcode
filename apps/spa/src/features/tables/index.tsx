@@ -5,7 +5,7 @@ import { SettingOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 import { Modal } from 'antd'
 import { usePopupCtl } from '@/features/popup/index.store'
 import useUrlState from '@ahooksjs/use-url-state'
-import { Table as TableType, useTables, useColumns, useData } from '@zdcode/superdb'
+import { Table as TableType, useTables, useColumns, useData, createTable, createColumn, Column, removeTable, removeColumn } from '@zdcode/superdb'
 import ColumnTitle, { Action } from './components/column-title'
 import './index.scss'
 
@@ -15,8 +15,7 @@ const preCls = 'features-tables'
 
 export default function Counter() {
   const tableDataPopupCtl = usePopupCtl('tableData')
-  const tablesRes = useTables()
-  const tables = tablesRes.data || []
+  const tables = useTables()
 
   const [urlState, setUrlState] = useUrlState({ tableName: '' });
 
@@ -43,16 +42,29 @@ export default function Counter() {
     tableDataPopupCtl.show({
       title: '新增表格',
       tableName: 'tables',
+      onChange: async (data) => {
+        const res = await createTable(data.name, data.title)
+      }
     })
   }
-
+  const onRemoveTable = () => {
+    confirm({
+      title: '确定删除该表格吗？',
+      icon: <ExclamationCircleFilled />,
+      content: '删除后不可恢复，且数据会被删除！',
+      okType: 'danger',
+      onOk() {
+        if (currentTable) removeTable(currentTable.name)
+      },
+    });
+  }
   const onSelectTable = (idx: number) => {
     urlState.tableName = tables[idx].name
     setUrlState({ ...urlState })
     setCurrentTable(tables[idx])
   }
 
-  const onColumnActionHandler = useCallback((id: number, action: Action) => {
+  const onColumnActionHandler = useCallback((id: number, action: Action, columnName: string) => {
     switch (action) {
       case 'edit':
         tableDataPopupCtl.show({
@@ -68,10 +80,7 @@ export default function Counter() {
           content: '删除后不可恢复，且数据会被删除！',
           okType: 'danger',
           onOk() {
-            console.log('OK');
-          },
-          onCancel() {
-            console.log('Cancel');
+            if (currentTable) removeColumn(currentTable.name, columnName, id)
           },
         });
         break
@@ -86,11 +95,38 @@ export default function Counter() {
     })) || []
   }, [tableColumns, onColumnActionHandler])
 
+  const onAddColumn = useCallback(() => {
+    if (!currentTable) return
+
+    tableDataPopupCtl.show({
+      title: '新增列',
+      tableName: 'table_column',
+      formData: {
+        table_id: currentTable.id
+      },
+      onChange: async (data: Column) => {
+        console.log('data', data);
+        const res = await createColumn(currentTable.name, data)
+      }
+    })
+  }, [currentTable])
+
+  const onAddData = () => {
+    if (!currentTable) return
+
+    tableDataPopupCtl.show({
+      title: '新增数据',
+      tableName: currentTable.name,
+    })
+  }
+
   return (
     <div className={classNames(preCls, 'flex w-full')}>
       <div className={classNames("w-52 h-full p-4 border border-r-slate-200 shrink-0")}>
         {tables.map(({ name, id }, i) => (
-          <div key={id} onClick={() => onSelectTable(i)} className='px-3 py-2 cursor-pointer hover:bg-slate-400 rounded-md'>{name}</div>
+          <div key={id} onClick={() => onSelectTable(i)} className={classNames('px-3 py-2 cursor-pointer hover:bg-slate-400 rounded-md', {
+            'bg-slate-600 text-slate-100': urlState.tableName === name
+          })}>{name}</div>
         ))}
         <Button className="mt-3" onClick={onAddTable} block>新增</Button>
       </div>
@@ -101,8 +137,10 @@ export default function Counter() {
             <p>{currentTable?.name}</p>
             <Button type="text" shape="circle" icon={<SettingOutlined />} />
           </div>
-          <div>
-            <Button type="primary">新增数据</Button>
+          <div className='space-x-2'>
+            <Button onClick={onAddColumn} type="primary">新增列</Button>
+            <Button onClick={onAddData} type="primary">新增数据</Button>
+            <Button onClick={onRemoveTable} type="primary" danger>删除表格</Button>
           </div>
         </div>
 

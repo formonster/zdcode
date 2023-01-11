@@ -33,7 +33,7 @@ const ColumnTitle: FC<IColumnTitleProps> = ({ name, id, onAction }) => {
   }, [])
 
   const onClickMenuItem = useCallback(({ key }: { key: Action }) => {
-    onAction(id, key as Action)
+    onAction(id, key as Action, name)
   }, [id, onAction])
 
   return (

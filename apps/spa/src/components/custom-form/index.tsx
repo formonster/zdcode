@@ -20,7 +20,7 @@ import {
 import { UploadOutlined } from '@ant-design/icons'
 import { UploadListProps } from 'antd/lib/upload'
 import { Gutter } from 'antd/lib/grid/row'
-import fetch from '@/utils/fetch'
+import { get, list } from '@zdcode/superdb'
 
 const { Option } = Select
 
@@ -91,26 +91,52 @@ function getOptions(data: { name: string; value: string | number }[] = []) {
   }
 }
 
-const MySelect = ({ datas, enumId, placeholder, ...args }) => {
+const MySelect = ({ datas, enumId, relationTableId, relationTableColumnId, placeholder, ...args }) => {
   const [menuData, setMenuData] = useState(datas || [])
 
+  const getEnumData = () => {
+    list('enums_item', {
+      where: {
+        enum_id: enumId,
+      },
+    }).then((enumItemRes) => {
+      const enumItems = enumItemRes.data
+      const data = enumItems?.map((item) => ({
+        name: item.name,
+        value: item.name,
+      }))
+      setMenuData(data)
+    })
+  }
+
+  const getRelationData = async () => {
+    const tableRes = await get('tables', {
+      where: {
+        id: relationTableId
+      }
+    })
+    const name = tableRes.data.name
+    const tableColumnRes = await get('table_column', {
+      where: {
+        id: relationTableColumnId
+      }
+    })
+    const columnName = tableColumnRes.data.name
+    const dataRes = await list(name, {
+      columns: ['id', columnName]
+    })
+    console.log('dataRes.data', name, dataRes.data);
+    
+    setMenuData(dataRes.data.map((dataItem) => ({
+      name: dataItem[columnName],
+      value: dataItem.id
+    })))
+  }
+
   useEffect(() => {
-    if (enumId) {
-      fetch.list({
-        table: 'enum_item',
-        where: {
-          enum_id: enumId,
-        },
-      }).then((enumItemRes) => {
-        const enumItems = enumItemRes.data.data
-        const data = enumItems?.map((item) => ({
-          name: item.title,
-          value: item.value,
-        }))
-        setMenuData(data)
-      })
-    }
-  }, [enumId])
+    if (enumId) getEnumData()
+    if (relationTableId && relationTableColumnId) getRelationData()
+  }, [enumId, relationTableId, relationTableColumnId])
 
   return (
     <Select placeholder={placeholder} {...args}>
@@ -127,8 +153,7 @@ const customFormComponents: {
   select: (props: CustomFormItem) => (
     <MySelect
       placeholder={props.placeholder}
-      datas={props.selectProps?.datas}
-      enumId={props.selectProps?.enumId}
+      {...props.selectProps}
     />
   ),
   checkbox: (props: CustomFormItem) => (
@@ -161,11 +186,9 @@ const CustomForm: FC<CustomFormProps> = ({
   const [form] = Form.useForm()
 
   const onFinish = (values: any) => {
-    console.log('Success:', values)
     columns.forEach((item) => {
       if ('format' in item) values = item.format(values[item.name], values)
     })
-    console.log('Format:', values)
     onChange(values)
   }
 
@@ -188,7 +211,7 @@ const CustomForm: FC<CustomFormProps> = ({
           if ('divider' in item)
             return <Divider {...item}>{item.title}</Divider>
 
-          const { name, label, require, message, type, span, ...props } = item
+          const { name, label, require, message, type, span = 24, ...props } = item
           return (
             <Col key={i} span={span}>
               <Form.Item

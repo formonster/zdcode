@@ -20,6 +20,7 @@
     "@mdx-js/react": "^2.1.5",
     "@mdx-js/rollup": "^2.1.5",
     "@reduxjs/toolkit": "^1.9.0",
+    "@tita/ui": "0.0.2",
     "@uiw/react-codemirror": "^4.15.1",
     "@zdcode/fetch": "workspace:^1.0.0",
     "@zdcode/superdb": "workspace:^1.0.0",

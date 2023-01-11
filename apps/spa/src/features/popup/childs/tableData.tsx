@@ -1,10 +1,8 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Column, useColumns } from '@zdcode/superdb'
+import { Column, useColumns, put, add } from '@zdcode/superdb'
 import { Modal } from 'antd'
-import { useSWR } from 'swr'
 import { usePopup, PopupStateValue } from '@/features/popup'
 import CustomForm, { CustomFormColumn } from '@/components/custom-form'
-import fetch from '@/utils/fetch'
 
 export interface TableDataPopupProps extends PopupStateValue {
   tableName: string
@@ -22,6 +20,17 @@ const getFormType = (column: Column) => {
       return { type: 'input', label: column.title, name: column.name }
     case "BOOLEAN":
       return { type: 'switch', label: column.title, name: column.name }
+    case 'RELATION':
+      return {
+        type: 'select',
+        label: column.title,
+        name: column.name,
+        // TODO 处理 relation_table_id & relation_table_column_id，加载对应的数据
+        selectProps: {
+          relationTableId: column.relation_table_id,
+          relationTableColumnId: column.relation_table_column_id,
+        },
+      }
     case 'ENUM':
       return {
         type: 'select',
@@ -54,24 +63,28 @@ const TableData: FC = function () {
   }, [popup.visible])
 
   const onChangeData = async (data: any) => {
+    if (popup.onChange) {
+      popup.onChange(data)
+      popupCtl.hide()
+      return
+    }
+
     let newData = null
     if (popup.dataId) {
       newData = {
         ...data,
         id: popup.dataId,
       }
-      await fetch.put({
-        table: popup.tableName,
+      await put(popup.tableName, {
         data: newData,
+        where: { id: popup.dataId }
       })
     } else {
-      const res = await fetch.add({
-        table: popup.tableName,
+      const res = await add(popup.tableName, {
         data,
       })
-      newData = res.data.data
+      newData = res.data
     }
-    popup.onChange(newData)
     popupCtl.hide()
   }
 

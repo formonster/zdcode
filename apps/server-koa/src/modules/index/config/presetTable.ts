@@ -39,7 +39,9 @@ const presetTable: {
       {
         name: 'table_id',
         title: '所属表ID',
-        type: 'INT',
+        type: 'RELATION',
+        relation_table_id: 1,
+        relation_table_column_id: 2,
       },
       {
         name: 'name',
@@ -61,8 +63,9 @@ const presetTable: {
       {
         name: 'type',
         title: '列类型',
-        type: 'CHAR',
+        type: 'ENUM',
         length: 100,
+        enum_id: 1
       },
       {
         name: 'length',
@@ -72,22 +75,23 @@ const presetTable: {
       {
         name: 'enum_id',
         title: '枚举ID',
-        type: 'INT',
-      },
-      {
-        name: 'enum_item_id',
-        title: '枚举项目ID',
-        type: 'INT',
+        type: 'RELATION',
+        relation_table_id: 3,
+        relation_table_column_id: 16,
       },
       {
         name: 'relation_table_id',
         title: '关联表ID',
-        type: 'INT',
+        type: 'RELATION',
+        relation_table_id: 1,
+        relation_table_column_id: 2,
       },
       {
         name: 'relation_table_column_id',
         title: '关联字段ID',
-        type: 'INT',
+        type: 'RELATION',
+        relation_table_id: 2,
+        relation_table_column_id: 6,
       },
       {
         name: 'not_null',
@@ -134,7 +138,9 @@ const presetTable: {
       {
         name: 'enum_id',
         title: '枚举ID',
-        type: 'INT',
+        type: 'RELATION',
+        relation_table_id: 3,
+        relation_table_column_id: 16,
       },
       {
         name: 'name',
