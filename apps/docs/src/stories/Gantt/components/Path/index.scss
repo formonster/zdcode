@@ -1,0 +1,37 @@
+.titaui-gantt-path {
+  position: absolute;
+  left: 0;
+  top: 0;
+  // stroke: #868686;
+  stroke-width: 1px;
+  pointer-events: none;
+  
+  &__hover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    fill: transparent;
+    pointer-events: visibleStroke;
+    stroke: transparent;
+    stroke-width: 7px;
+    pointer-events: auto;
+  }
+  &__hover:hover + path {
+    stroke: #e65757;
+  }
+  &__close {
+    opacity: 0;
+    transition: opacity .3s, transform .3s;
+    transform-origin: right center;
+    z-index: 4;
+    cursor: pointer;
+    pointer-events: auto;
+
+    &:hover {
+      opacity: 1;
+    }
+    &--show {
+      opacity: 1;
+    }
+  }
+}

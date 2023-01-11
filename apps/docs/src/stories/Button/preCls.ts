@@ -1,0 +1,1 @@
+export const preCls = 'titaui-button'

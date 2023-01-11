@@ -1,0 +1,55 @@
+.titaui-gantt-drag-link {
+  position: relative;
+  width: max-content;
+
+  &:hover {
+    z-index: 20;
+  }
+  &:hover &__left-bar {
+    transform: scale(1) translateX(-17px);
+  }
+  &:hover &__right-bar {
+    transform: scale(1) translateX(17px);
+  }
+  &__left-bar, &__right-bar {
+    position: absolute;
+    height: 24px;
+    width: 17px;
+    top: 0;
+    z-index: 2;
+    transition: transform .3s;
+    transform: scale(0);
+    cursor: pointer;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      transform: translateY(-50%);
+      background-color: #A4ACB9;
+      box-shadow: 0px 4px 6px 2px rgba(127,145,180,0.2);
+      border: 2px solid #FFFFFF;
+      border-radius: 50%;
+      transition: background-color .3s;
+    }
+    &:hover::before {
+      background-color: #2879FF;
+    }
+  }
+  &__left-bar {
+    left: 0;
+
+    &::before {
+      left: 0;
+    }
+  }
+  &__right-bar {
+    right: 0;
+
+    &::before {
+      right: 0;
+    }
+  }
+}

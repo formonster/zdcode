@@ -1,0 +1,45 @@
+.titaui-button {
+  min-width: 90px;
+  height: 32px;
+  background: #FFFFFF;
+  border-radius: 18px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+
+  &-primary {
+    border: 1px solid #2879FF;
+    color: #2879FF;
+  }
+
+  &-cancel {
+    border: 1px solid #DFE3EA;
+    color: #6F7886;
+  }
+
+  &-delete {
+    border: 1px solid #F05E5E;
+    color: #F05E5E;
+  }
+
+  &-size {
+    &-large {
+      min-width: 96px;
+      height: 36px;
+    }
+
+    &-small {
+      min-width: 64px;
+      height: 28px;
+    }
+  }
+}
+
+.titaui-button-default {
+  width: 90px;
+  height: 32px;
+  background: #2879FF;
+  border-radius: 18px;
+}

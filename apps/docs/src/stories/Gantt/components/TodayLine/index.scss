@@ -1,0 +1,27 @@
+.titaui-gantt-tady-line {
+  position: absolute;
+  top: 26px;
+  width: 1px;
+  border: 1px solid #2879FF;;
+  z-index: 10;
+  cursor: pointer;
+
+  &--autoCenter {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: #2879FF;
+    box-shadow: 0px 4px 6px 2px rgba(127,145,180,0.2);
+    border: 1px solid #FFFFFF;
+  }
+}

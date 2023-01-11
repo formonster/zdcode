@@ -1,0 +1,13 @@
+.titaui-scroll-example-base {
+  height: 500px;
+
+  &__content {
+    background: linear-gradient(
+      90deg,
+      rgba(233, 233, 233, 0.2) 50%,
+      transparent 0
+    ),
+    linear-gradient(rgba(233, 233, 233, 0.2) 50%, transparent 0);
+    background-size: 20px 20px;
+  }
+}

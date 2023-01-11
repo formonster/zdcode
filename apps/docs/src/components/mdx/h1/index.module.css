@@ -1,0 +1,19 @@
+.mdx-h1 {
+  position: relative;
+  font-weight: bold;
+  font-size: 35px;
+  line-height: 2em;
+  margin-bottom: 10px;
+}
+.mdx-h1:hover:before {
+  opacity: 1;
+}
+.mdx-h1::before {
+  content: '#1';
+  position: absolute;
+  left: -10px;
+  color: #ccc;
+  opacity: 0;
+  transition: opacity 0.3s;
+  transform: translateX(-100%);
+}

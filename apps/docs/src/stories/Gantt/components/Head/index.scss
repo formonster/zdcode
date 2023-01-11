@@ -1,0 +1,72 @@
+.titaui-gantt-head {
+  &__item {
+    flex-shrink: 0;
+    border: 1px solid rgba(223,227,234,0.5);
+  }
+  &__item + &__item {
+    border-left-width: 0;
+  }
+  &__year-month {
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 400;
+    color: #3f4755;
+    line-height: 18px;
+    cursor: pointer;
+    transition: background-color .3s;
+
+    &:hover {
+      background-color: rgb(221, 221, 221);
+    }
+  }
+  &__days {
+    display: flex;
+
+    &-item {
+      position: relative;
+      flex: 1;
+      height: 26px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 400;
+      color: #3f4755;
+      line-height: 18px;
+      cursor: pointer;
+      transition: background-color .3s;
+
+      &:hover {
+        background-color: rgb(221, 221, 221);
+      }
+
+      &--week {
+        justify-content: flex-start;
+        overflow: visible;
+        white-space: nowrap;
+      }
+
+      &--weekend {
+        background: rgba(240, 244, 250, 0.8);
+      }
+    }
+  }
+  &__week-bg {
+    position: absolute;
+    width: 100%;
+    top: 26px;
+    background: rgba(240, 244, 250, 0.8);
+    pointer-events: none;
+  }
+  &__last-day {
+    position: absolute;
+    width: 1px;
+    right: -1px;
+    top: 26px;
+    pointer-events: none;
+    border-right: 1px solid rgba(223,227,234,0.5);
+  }
+}

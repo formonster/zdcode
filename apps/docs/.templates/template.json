@@ -1,0 +1,52 @@
+[
+  {
+    "name": "component",
+    "params": [
+      "componentName", 
+      ["componentType", ["base", "data"]]
+    ],
+    "root": "./src",
+    "templates": [
+      {
+        "name": "$T{F|componentName}",
+        "type": "dir",
+        "root": "stories",
+        "files": [
+          {
+            "name": "index.tsx",
+            "template": "component/index.tsx.tpl"
+          },
+          {
+            "name": "index.scss",
+            "template": "component/index.scss.tpl"
+          }
+        ]
+      },
+      {
+        "name": "$T{f|componentName}.mdx",
+        "root": "docs/components",
+        "template": "component/index.mdx.tpl"
+      },
+      {
+        "type": "replace",
+        "replaceFile": "docs.routes.ts",
+        "replaceOptions": [
+          {
+            "target": "componentType:$T{componentType}",
+            "template": "component/route.tpl"
+          }
+        ]
+      },
+      {
+        "type": "replace",
+        "replaceFile": "stories/index.tsx",
+        "replaceOptions": [
+          {
+            "target": "exportComponent",
+            "template": "component/export.tpl"
+          }
+        ]
+      }
+    ]
+  }
+]

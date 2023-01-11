@@ -1,0 +1,37 @@
+.titaui-split {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+
+  &__item-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__drag-container + &__drag-container {
+    border-left: 1px solid #ccc;
+  }
+  &__drag-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    display: flex;
+  }
+  &__drag-item {
+    position: relative;
+    height: 100%;
+  }
+  &__drag-line {
+    position: absolute;
+    height: 100%;
+    width: 9px;
+    right: 0;
+    pointer-events: auto;
+    transform: translateX(4px);
+    cursor: col-resize;
+  }
+}

@@ -1,0 +1,17 @@
+.mdx-h5 {
+  position: relative;
+  font-weight: bold;
+  line-height: 2em;
+}
+.mdx-h5:hover:before {
+  opacity: 1;
+}
+.mdx-h5::before {
+  content: '#5';
+  position: absolute;
+  left: -10px;
+  color: #ccc;
+  opacity: 0;
+  transition: opacity 0.3s;
+  transform: translateX(-100%);
+}

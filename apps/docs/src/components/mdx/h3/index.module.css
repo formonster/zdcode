@@ -1,0 +1,18 @@
+.mdx-h3 {
+  position: relative;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 2em;
+}
+.mdx-h3:hover:before {
+  opacity: 1;
+}
+.mdx-h3::before {
+  content: '#3';
+  position: absolute;
+  left: -10px;
+  color: #ccc;
+  opacity: 0;
+  transition: opacity 0.3s;
+  transform: translateX(-100%);
+}

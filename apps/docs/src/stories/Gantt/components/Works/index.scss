@@ -1,0 +1,12 @@
+.titaui-gantt-works {
+  &__task-line {
+    position: relative;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+  }
+  &__task-line + &__task-line {
+    border-top: 1px solid rgba(223, 227, 234, 0.5);
+  }
+}
