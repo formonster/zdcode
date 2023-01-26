@@ -67,7 +67,7 @@ export const removeTable = (knex: Knex<any, unknown[]>, name: string) => {
 }
 
 export const createColumns = (knex: Knex<any, unknown[]>, tableName: string, columns: Column[]) => {
-  return getPromiseData(knex.schema.createTable(tableName, function (table) {
+  return getPromiseData(knex.schema.alterTable(tableName, function (table) {
     columns.forEach(createColumn(table))
   }))
 }
@@ -94,10 +94,10 @@ export const get = <T extends {}>(
   knex: Knex<any, unknown[]>,
   props: Required<GetProps>
 ) => {
-  const { table, columns = [], where } = props
+  const { table, columns = [], where = {} } = props
 
   const query = knex.select(...columns).from<T>(table)
-  if (where) query.where(where)
+  query.where({ is_delete: 0, ...where })
 
   // @ts-ignore
   return getPromiseData<T[]>(query)

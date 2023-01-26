@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@zdcode/fetch": "workspace:^1.0.0",
+    "@zdcode/ui": "workspace:^0.0.0",
     "lodash": "^4.17.21",
     "react": "^18.2.0"
   },

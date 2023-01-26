@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 4000",
     "build:docs": "tsc && vite build",
     "preview": "vite preview",
     "build": "tsup",
@@ -25,6 +25,7 @@
     "@zdcode/fetch": "workspace:^1.0.0",
     "@zdcode/superdb": "workspace:^1.0.0",
     "@zdcode/ui": "workspace:^0.0.0",
+    "@zdcode/utils": "workspace:^2.1.0",
     "ahooks": "^3.7.2",
     "antd": "^4.24.1",
     "classnames": "^2.3.2",

@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
-import { Button, ColumnOption, ColumnOptions, Table } from '@zdcode/ui'
+import { ColumnOption, ColumnOptions, message, Table } from '@zdcode/ui'
 import { SettingOutlined, ExclamationCircleFilled } from '@ant-design/icons'
-import { Modal } from 'antd'
+import { Button, Modal } from 'antd'
 import { usePopupCtl } from '@/features/popup/index.store'
 import useUrlState from '@ahooksjs/use-url-state'
-import { Table as TableType, useTables, useColumns, useData, createTable, createColumn, Column, removeTable, removeColumn } from '@zdcode/superdb'
+import { Table as TableType, useTables, useColumns, useData, createTable, createColumn, Column, removeTable, removeColumn, responseError, del } from '@zdcode/superdb'
 import ColumnTitle, { Action } from './components/column-title'
 import './index.scss'
 
@@ -15,13 +15,18 @@ const preCls = 'features-tables'
 
 export default function Counter() {
   const tableDataPopupCtl = usePopupCtl('tableData')
-  const tables = useTables()
+
+  const tablesFetch = useTables()
+  const tables = tablesFetch.data
 
   const [urlState, setUrlState] = useUrlState({ tableName: '' });
 
   const [currentTable, setCurrentTable] = useState<TableType>()
-  const tableColumns = useColumns(currentTable?.name)
-  const tableData = useData(currentTable?.name)
+  const tableColumnsFetch = useColumns(currentTable?.name)
+  const tableColumns = tableColumnsFetch.data
+
+  const tableDataFetch = useData(currentTable?.name)
+  const tableData = tableDataFetch.data
 
   useEffect(() => {
     if (currentTable?.name) setUrlState({ tableName: currentTable?.name })
@@ -42,8 +47,12 @@ export default function Counter() {
     tableDataPopupCtl.show({
       title: '新增表格',
       tableName: 'tables',
-      onChange: async (data) => {
+      onBeforeChange: async (data) => {
         const res = await createTable(data.name, data.title)
+        if (responseError(res)) return false
+        message.success('创建成功！')
+        tablesFetch.refresh()
+        return false
       }
     })
   }
@@ -53,12 +62,21 @@ export default function Counter() {
       icon: <ExclamationCircleFilled />,
       content: '删除后不可恢复，且数据会被删除！',
       okType: 'danger',
-      onOk() {
-        if (currentTable) removeTable(currentTable.name)
+      async onOk() {
+        if (currentTable) {
+          const res = await removeTable(currentTable.name)
+          if (responseError(res)) return
+          message.success('删除成功！')
+
+          setCurrentTable(tables[currentTableIndex.current - 1])
+          tablesFetch.refresh()
+        }
       },
     });
   }
+  const currentTableIndex = useRef<number>(0)
   const onSelectTable = (idx: number) => {
+    currentTableIndex.current = idx
     urlState.tableName = tables[idx].name
     setUrlState({ ...urlState })
     setCurrentTable(tables[idx])
@@ -70,7 +88,11 @@ export default function Counter() {
         tableDataPopupCtl.show({
           title: '修改列',
           tableName: 'table_column',
-          dataId: id
+          dataId: id,
+          onChange: () => {
+            message.success('修改成功！')
+            tableColumnsFetch.refresh()
+          }
         })
         break
       case 'delete':
@@ -79,20 +101,72 @@ export default function Counter() {
           icon: <ExclamationCircleFilled />,
           content: '删除后不可恢复，且数据会被删除！',
           okType: 'danger',
-          onOk() {
-            if (currentTable) removeColumn(currentTable.name, columnName, id)
+          async onOk() {
+            if (currentTable) {
+              const res = await removeColumn(currentTable.name, columnName, id)
+
+              if (responseError(res)) return false
+              message.success('删除成功！')
+              tableColumnsFetch.refresh()
+            }
           },
         });
         break
     }
-  }, [])
+  }, [currentTable])
+
+  /** 修改数据 */
+  const onUpdateDataHandler = async (id: number) => {
+    if (!currentTable) return
+    tableDataPopupCtl.show({
+      title: '修改数据',
+      dataId: id,
+      tableName: currentTable.name,
+      onChange: () => {
+        tableDataFetch.refresh()
+      }
+    })
+  }
+
+  /** 删除数据 */
+  const onRemoveDataHandler = async (id: number) => {
+    if (!currentTable) return
+
+    confirm({
+      title: '确定删除该数据吗？',
+      icon: <ExclamationCircleFilled />,
+      content: '删除后不可恢复！',
+      okType: 'danger',
+      async onOk() {
+        const res = await del(currentTable?.name, {
+          where: { id }
+        })
+        if (responseError(res)) return false
+        message.success('删除成功！')
+        tableDataFetch.refresh()
+      }
+    });
+  }
 
   const columns = useMemo<ColumnOptions<any>>(() => {
-    return tableColumns.data?.map<ColumnOption>(({ name, id }) => ({
-      title: <ColumnTitle onAction={onColumnActionHandler} id={id as number} name={name} />,
-      key: id,
-      dataIndex: name
-    })) || []
+    return [
+      ...tableColumns.map(({ name, id }) => ({
+        title: <ColumnTitle onAction={onColumnActionHandler} id={id as number} name={name} />,
+        key: id,
+        dataIndex: name
+      })) || [],
+      {
+        title: '操作',
+        dataIndex: 'id',
+        width: 120,
+        render: ({ value }) => (
+          <p className='space-x-2'>
+            <a className='text-red-500 text-sm' onClick={() => onRemoveDataHandler(value)}>删除</a>
+            <a className='text-sm' onClick={() => onUpdateDataHandler(value)}>编辑</a>
+          </p>
+        )
+      }
+    ]
   }, [tableColumns, onColumnActionHandler])
 
   const onAddColumn = useCallback(() => {
@@ -104,9 +178,11 @@ export default function Counter() {
       formData: {
         table_id: currentTable.id
       },
-      onChange: async (data: Column) => {
-        console.log('data', data);
+      onBeforeChange: async (data) => {
         const res = await createColumn(currentTable.name, data)
+        if (responseError(res)) return false
+        message.success('新增成功！')
+        return false
       }
     })
   }, [currentTable])
@@ -117,6 +193,10 @@ export default function Counter() {
     tableDataPopupCtl.show({
       title: '新增数据',
       tableName: currentTable.name,
+      onChange: () => {
+        message.success('新增成功！')
+        tableDataFetch.refresh()
+      }
     })
   }
 
@@ -128,7 +208,7 @@ export default function Counter() {
             'bg-slate-600 text-slate-100': urlState.tableName === name
           })}>{name}</div>
         ))}
-        <Button className="mt-3" onClick={onAddTable} block>新增</Button>
+        <Button className="mt-3" onClick={onAddTable} block>新增表格</Button>
       </div>
       <div className='w-full'>
         {/* 头部 */}
@@ -137,16 +217,16 @@ export default function Counter() {
             <p>{currentTable?.name}</p>
             <Button type="text" shape="circle" icon={<SettingOutlined />} />
           </div>
-          <div className='space-x-2'>
+          {!currentTable?.is_original && <div className='space-x-2'>
             <Button onClick={onAddColumn} type="primary">新增列</Button>
             <Button onClick={onAddData} type="primary">新增数据</Button>
             <Button onClick={onRemoveTable} type="primary" danger>删除表格</Button>
-          </div>
+          </div>}
         </div>
 
         {/* 数据 */}
         <div className='py-3 px-4'>
-          <Table dataSource={tableData.data || []} columns={columns} rowKey="id" showEdit />
+          <Table dataSource={tableData || []} columns={columns} rowKey="id" showEdit />
         </div>
       </div>
     </div>

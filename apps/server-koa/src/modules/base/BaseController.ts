@@ -1,8 +1,8 @@
-import { GET, POST, route } from 'awilix-koa'
+import { GET, POST, PUT, route } from 'awilix-koa'
 import Router from '@koa/router'
 import { IBaseService, Work } from './BaseInterface'
 import { resSuccess } from '../../utils/common'
-import { AddProps, Column, DelProps, GetProps, Table } from '@zdcode/superdb'
+import { AddProps, Column, DelProps, GetProps, PutProps, Table } from '@zdcode/superdb'
 import { TableName } from 'types/table'
 
 @route('/api')
@@ -35,12 +35,28 @@ class BaseController {
     const res = await this.baseService.add({ ...datas, table })
     ctx.body = resSuccess(res)
   }
+  @route('/:table/put')
+  @PUT()
+  async put(ctx: Router.RouterContext) {
+    const { table } = ctx.params as { table: TableName }
+    const datas = ctx.request.body as PutProps;
+    const res = await this.baseService.put({ ...datas, table })
+    ctx.body = resSuccess(res)
+  }
   @route('/:table/remove')
   @POST()
   async remove(ctx: Router.RouterContext) {
     const { table } = ctx.params as { table: TableName }
     const datas = ctx.request.body as DelProps;
     const res = await this.baseService.remove({ ...datas, table })
+    ctx.body = resSuccess(res)
+  }
+  @route('/:table/del')
+  @POST()
+  async del(ctx: Router.RouterContext) {
+    const { table } = ctx.params as { table: TableName }
+    const datas = ctx.request.body as DelProps;
+    const res = await this.baseService.del({ ...datas, table })
     ctx.body = resSuccess(res)
   }
   @route('/base/work')

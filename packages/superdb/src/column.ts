@@ -1,32 +1,26 @@
-import useSWR from 'swr'
-import { get, list, work } from './fetch'
+import { get, list, responseError, Table, work } from './fetch'
+import { useFetch } from '@zdcode/fetch'
 import { Column } from '.'
 
-export const useViewList = () => {
-  const { data, error } = useSWR(
-    'http://localhost:4600/api/base/list?table=views'
-  )
-  console.log('data', data)
-}
-
-export const useColumns = (tableName: string | undefined) => useSWR<Column[]>(`useColumns:${tableName}`, async () => {
+export const useColumns = (tableName?: string) => useFetch<Column[]>(async () => {
   if (!tableName) return []
 
-  const tableRes = await get('tables', {
+  const tableRes = await get<Table>('tables', {
     where: {
       name: tableName
     }
   })
+  if (responseError(tableRes)) return []
   
   const tableId = tableRes.data.id
-  const columnRes = await list('table_column', {
+  const columnRes = await list<Column>('table_column', {
     where: {
       table_id: tableId
     }
   })
   
-  return columnRes.data
-})
+  return columnRes.data || []
+}, [], [tableName])
 
 export const createColumn = (tableName: string, column: Column) => {
   return work([

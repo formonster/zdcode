@@ -222,8 +222,10 @@ class BaseService implements IBaseService {
           }
         }
       })
+      console.log('work result', result);
       return true
     } catch (error: any) {
+      console.log('error', error);
       throw new Error(error)
     }
   }

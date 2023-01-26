@@ -1,15 +1,11 @@
-import { useState, useEffect } from 'react'
-import { list, work } from '.'
+import { useFetch } from '@zdcode/fetch'
+import { list, responseError, Table, work } from '.'
 
-export const useTables = () => {
-  const [tables, setTables] = useState([])
-  useEffect(() => {
-    list('tables').then(res => {
-      setTables(res.data || [])
-    })
-  }, [])
-  return tables
-}
+export const useTables = () => useFetch<Table[]>(async () => {
+  const res = await list<Table>('tables')
+  if (responseError(res)) return []
+  return res.data || []
+}, [], [])
 
 export const createTable = (name: string, title: string) => {
   return work([

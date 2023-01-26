@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useMemo } from 'react'
-import { Button } from '@zdcode/ui'
-import { Dropdown, MenuProps } from 'antd'
+import { Dropdown, MenuProps, Button } from 'antd'
 import { MoreOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import classNames from 'classnames'
 

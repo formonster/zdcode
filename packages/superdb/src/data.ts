@@ -1,11 +1,10 @@
-import useSWR from 'swr'
-import { list } from './fetch'
+import { useFetch } from '@zdcode/fetch'
+import { list, responseError } from './fetch'
 
-export const useData = (table: string | undefined) => {
-  return useSWR<any[]>(['useData', table], async () => {
-    if (!table) return []
+export const useData = (table: string | undefined) => useFetch<any[]>(async () => {
+  if (!table) return []
 
-    const tableRes = await list(table, {})
-    return tableRes.data || []
-  })
-}
+  const res = await list<any>(table)
+  if (responseError(res)) return []
+  return res.data || []
+}, [], [table])

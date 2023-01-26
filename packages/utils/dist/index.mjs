@@ -1,1 +1,250 @@
-import{clone as m,flattenDeep as w}from"lodash";var E=function(e=[],t,r){let n={};return Array.isArray(t)?e.forEach(o=>{n[o[t[0]]]=r?Object.assign(o,m(r)):o[t[1]]}):e.forEach(o=>{n[o[t]]=r?Object.assign(o,m(r)):o}),n},F=function(e,t){function r(n){return function(o,i){var s=n?o[n]:o,c=n?i[n]:i;if(typeof s=="number"&&typeof c=="number")return s-c}}return e.sort(r(t))},D=function(e,t){function r(n){return function(o,i){var s=n?o[n]:o,c=n?i[n]:i;if(typeof s=="number"&&typeof c=="number")return c-s}}return e.sort(r(t))},K=(e,t)=>{let r=n=>n[t]?[n,n[t].map(r)]:n;return w(e.map(r))},S=(e,t)=>e.map(r=>{let n={};return t.forEach(o=>{n[o]=r[o]}),n});import x from"path";import a from"fs";var k=e=>{let t=x.resolve(process.cwd(),e);return a.readFileSync(t,{encoding:"utf-8"})},$=e=>{let t=x.resolve(process.cwd(),e),r=a.readFileSync(t,{encoding:"utf-8"});try{return JSON.parse(r)}catch{return{}}},u=e=>new Promise((t,r)=>{a.access(e,n=>{t(!n)})}),j=async(e,t,r)=>{if(await u(e))return console.log("\u26A0\uFE0F \u6587\u4EF6\u5DF2\u5B58\u5728\uFF1A",e);let o=e.split("/"),i=o[o.length-1],s=e.replace(RegExp(`${i}$`),"");await g(s,{basePath:r}),a.writeFileSync(e,t,"utf8")},g=async(e,t)=>{let{basePath:r=""}=t||{};RegExp(`^${r}`).test(e)||console.warn("\u4F20\u5165\u591A\u8DEF\u5F84\u4E0D\u662F\u4EE5",r,"\u5F00\u5934\uFF0C\u914D\u7F6E\u65E0\u6548\uFF01");let o=e.replace(r,"").replace(/^\//,"").split("/");for(;o.length;){let i=o.shift(),s=`${r}/${i}`,c=await u(s);try{c||a.mkdirSync(s)}catch(l){if(l&&l.message&&!l.message.includes("file already exists"))throw new Error(l)}finally{r=s}}},v=async(e,t,r)=>{if(await u(e))return console.log("\u26A0\uFE0F \u6587\u4EF6\u5DF2\u5B58\u5728\uFF1A",e);let o=e.split("/"),i=o[o.length-1],s=e.replace(RegExp(`${i}$`),"");return await g(s,{basePath:r}),new Promise((c,l)=>{let T=a.createReadStream(t.path),p=a.createWriteStream(e);T.pipe(p);let f=!1;p.on("error",y=>{f=!0,p.destroy(),l(y)}),p.on("finish",()=>{f||(c("finish"),p.close())})})};var L=e=>e.then(t=>[t]).catch(t=>[null,t]),h=(e,t=!0)=>{if(e.status==="fulfilled")return[e.value];if(t)throw new Error(e.reason);return[null,e.reason]},O=(e,t=!0)=>e.map(r=>h(r,t));var d=e=>{let t=e[0].charCodeAt(0);return t>=65&&t<=90},U=e=>{let t=e[0].charCodeAt(0);return t>=97&&t<=122};function W(e){return e.charAt(0).toUpperCase()+e.slice(1)}function q(e){return e.charAt(0).toLowerCase()+e.slice(1)}var z=e=>e.split("").map(t=>d(t)?`-${t.toLowerCase()}`:t).join("");export{E as arr2Dic,u as checkExist,g as createDir,v as createFile,K as flattenDeepByField,O as getAllSettledPromiseData,k as getProjectFile,$ as getProjectJsonFile,L as getPromiseData,h as getSettledData,z as humpToChain,U as isLowerCase,d as isUpperCase,q as lowerFirstLetter,S as mapFields,F as sortAsc,D as sortDesc,W as upperFirstLetter,j as writeFile};
+// src/array.ts
+import cloneDeep from "lodash/cloneDeep";
+import flattenDeep from "lodash/flattenDeep";
+function arr2Dic(arr = [], field, options = {}) {
+  const { alwaysArray = false, withIndex = false } = options;
+  let dic = {};
+  arr.forEach((vo, i) => {
+    if (withIndex)
+      vo._index = i;
+    if (dic[vo[field]]) {
+      if (!Array.isArray(dic[vo[field]]))
+        dic[vo[field]] = [dic[vo[field]]];
+      dic[vo[field]].push(vo);
+      return;
+    }
+    dic[vo[field]] = alwaysArray ? [vo] : vo;
+  });
+  return dic;
+}
+function arr2DicDeep(arr = [], field, childsKey, options = {}) {
+  let dic = {};
+  for (const currentitem of arr) {
+    const item = { ...currentitem };
+    if (item[childsKey] && Array.isArray(item[childsKey])) {
+      item[childsKey] = arr2DicDeep(
+        item[childsKey],
+        field,
+        childsKey,
+        options
+      );
+    }
+    dic[item[field]] = item;
+  }
+  return dic;
+}
+var deepMap = (arr, deepKey, map, parent = void 0, indexPath = []) => {
+  const _arr = cloneDeep(arr);
+  let i = 0;
+  for (const item of _arr) {
+    const currentIndexPath = [...indexPath, i];
+    _arr[i] = map(item, parent, currentIndexPath);
+    const childs = _arr[i][deepKey];
+    if (childs && Array.isArray(childs)) {
+      _arr[i][deepKey] = deepMap(
+        _arr[i][deepKey],
+        deepKey,
+        map,
+        _arr[i],
+        currentIndexPath
+      );
+    }
+    i++;
+  }
+  return _arr;
+};
+var findFirstLeaf = (arr, deepKey) => {
+  let currentNode = arr[0];
+  while (currentNode[deepKey]) {
+    const childs = currentNode[deepKey];
+    const next = childs[0];
+    if (!next)
+      return currentNode;
+    currentNode = next;
+  }
+  return currentNode;
+};
+var sortAsc = function(arr, field) {
+  function compare(path2) {
+    return function(a, b) {
+      var value1 = path2 ? a[path2] : a;
+      var value2 = path2 ? b[path2] : b;
+      if (typeof value1 === "number" && typeof value2 === "number")
+        return value1 - value2;
+    };
+  }
+  return arr.sort(compare(field));
+};
+var sortDesc = function(arr, field) {
+  function compare(path2) {
+    return function(a, b) {
+      var value1 = path2 ? a[path2] : a;
+      var value2 = path2 ? b[path2] : b;
+      if (typeof value1 === "number" && typeof value2 === "number")
+        return value2 - value1;
+    };
+  }
+  return arr.sort(compare(field));
+};
+var flattenDeepByField = (arr, field) => {
+  const map = (item) => {
+    if (!item[field])
+      return item;
+    return [item, item[field].map(map)];
+  };
+  return flattenDeep(arr.map(map));
+};
+var mapFields = (arr, fields) => {
+  return arr.map((item) => {
+    let res = {};
+    fields.forEach((key) => {
+      res[key] = item[key];
+    });
+    return res;
+  });
+};
+
+// src/fs.ts
+import path from "path";
+import fs from "fs";
+var getProjectFile = (file) => {
+  const filePath = path.resolve(process.cwd(), file);
+  return fs.readFileSync(filePath, { encoding: "utf-8" });
+};
+var getProjectJsonFile = (file) => {
+  const filePath = path.resolve(process.cwd(), file);
+  const content = fs.readFileSync(filePath, { encoding: "utf-8" });
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    return {};
+  }
+};
+var checkExist = (path2) => {
+  return new Promise((resolve, reject) => {
+    fs.access(path2, (err) => {
+      resolve(!err);
+    });
+  });
+};
+var writeFile = async (path2, content, basePath) => {
+  const isExist = await checkExist(path2);
+  if (isExist)
+    return console.log("\u26A0\uFE0F \u6587\u4EF6\u5DF2\u5B58\u5728\uFF1A", path2);
+  const pathArr = path2.split("/");
+  const fileName = pathArr[pathArr.length - 1];
+  const dirPath = path2.replace(RegExp(`${fileName}$`), "");
+  await createDir(dirPath, { basePath });
+  fs.writeFileSync(path2, content, "utf8");
+};
+var createDir = async (path2, options) => {
+  let { basePath = "" } = options || {};
+  if (!RegExp(`^${basePath}`).test(path2)) {
+    console.warn("\u4F20\u5165\u591A\u8DEF\u5F84\u4E0D\u662F\u4EE5", basePath, "\u5F00\u5934\uFF0C\u914D\u7F6E\u65E0\u6548\uFF01");
+  }
+  const checkDirPath = path2.replace(basePath, "").replace(/^\//, "");
+  const paths = checkDirPath.split("/");
+  while (paths.length) {
+    const path3 = paths.shift();
+    const fullPath = `${basePath}/${path3}`;
+    const isExist = await checkExist(fullPath);
+    try {
+      if (!isExist)
+        fs.mkdirSync(fullPath);
+    } catch (error) {
+      if (error && error.message && !error.message.includes("file already exists")) {
+        throw new Error(error);
+      }
+    } finally {
+      basePath = fullPath;
+    }
+  }
+};
+var createFile = async (path2, file, basePath) => {
+  const isExist = await checkExist(path2);
+  if (isExist)
+    return console.log("\u26A0\uFE0F \u6587\u4EF6\u5DF2\u5B58\u5728\uFF1A", path2);
+  const pathArr = path2.split("/");
+  const fileName = pathArr[pathArr.length - 1];
+  const dirPath = path2.replace(RegExp(`${fileName}$`), "");
+  await createDir(dirPath, { basePath });
+  return new Promise((resolve, reject) => {
+    const render = fs.createReadStream(file.path);
+    const upStream = fs.createWriteStream(path2);
+    render.pipe(upStream);
+    let errFlag = false;
+    upStream.on("error", (err) => {
+      errFlag = true;
+      upStream.destroy();
+      reject(err);
+    });
+    upStream.on("finish", () => {
+      if (errFlag)
+        return;
+      resolve("finish");
+      upStream.close();
+    });
+  });
+};
+
+// src/promise.ts
+var getPromiseData = (func) => {
+  return func.then((res) => [res]).catch((err) => [null, err]);
+};
+var getSettledData = (result, throwError = true) => {
+  if (result.status === "fulfilled") {
+    return [result.value];
+  } else {
+    if (throwError)
+      throw new Error(result.reason);
+    return [null, result.reason];
+  }
+};
+var getAllSettledPromiseData = (promiseSettledResult, throwError = true) => {
+  return promiseSettledResult.map((item) => getSettledData(item, throwError));
+};
+
+// src/string.ts
+var isUpperCase = (str) => {
+  const code = str[0].charCodeAt(0);
+  return code >= 65 && code <= 90;
+};
+var isLowerCase = (str) => {
+  const code = str[0].charCodeAt(0);
+  return code >= 97 && code <= 122;
+};
+
+// src/format.ts
+function upperFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+function lowerFirstLetter(str) {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}
+var humpToChain = (str) => {
+  return str.split("").map((char) => isUpperCase(char) ? `-${char.toLowerCase()}` : char).join("");
+};
+export {
+  arr2Dic,
+  arr2DicDeep,
+  checkExist,
+  createDir,
+  createFile,
+  deepMap,
+  findFirstLeaf,
+  flattenDeepByField,
+  getAllSettledPromiseData,
+  getProjectFile,
+  getProjectJsonFile,
+  getPromiseData,
+  getSettledData,
+  humpToChain,
+  isLowerCase,
+  isUpperCase,
+  lowerFirstLetter,
+  mapFields,
+  sortAsc,
+  sortDesc,
+  upperFirstLetter,
+  writeFile
+};

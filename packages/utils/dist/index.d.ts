@@ -1,8 +1,18 @@
 import { File } from 'formidable';
 
-declare const arr2Dic: <T, K extends keyof T>(arr: T[] | undefined, field: K, other?: object) => {
-    [name: string]: T;
-};
+declare function arr2Dic<T extends Record<string, any>, K extends keyof T, A extends boolean>(arr: T[] | undefined, field: K, options?: {
+    alwaysArray?: A;
+    withIndex?: boolean;
+}): A extends true ? Record<string, (T & {
+    _index?: number;
+})[]> : Record<string, (T & {
+    _index?: number;
+})>;
+declare function arr2DicDeep<T extends Record<string, any>, K extends keyof T, A extends boolean>(arr: T[] | undefined, field: K, childsKey: K, options?: {
+    alwaysArray?: A;
+}): A extends true ? Record<string, T[]> : Record<string, T>;
+declare const deepMap: <T extends unknown, K extends keyof T>(arr: T[], deepKey: K, map: (data: T, parent: T | undefined, indexPath: number[]) => any, parent?: T | undefined, indexPath?: number[]) => T[];
+declare const findFirstLeaf: <T extends unknown, K extends keyof T>(arr: T[], deepKey: K) => T;
 declare const sortAsc: <T, K extends keyof T>(arr: T[], field: K) => T[];
 declare const sortDesc: <T, K extends keyof T>(arr: T[], field: K) => T[];
 declare const flattenDeepByField: (arr: any[], field: string) => any[];
@@ -33,4 +43,4 @@ declare function lowerFirstLetter(str: string): string;
  */
 declare const humpToChain: (str: string) => string;
 
-export { CreateDirOption, arr2Dic, checkExist, createDir, createFile, flattenDeepByField, getAllSettledPromiseData, getProjectFile, getProjectJsonFile, getPromiseData, getSettledData, humpToChain, isLowerCase, isUpperCase, lowerFirstLetter, mapFields, sortAsc, sortDesc, upperFirstLetter, writeFile };
+export { CreateDirOption, arr2Dic, arr2DicDeep, checkExist, createDir, createFile, deepMap, findFirstLeaf, flattenDeepByField, getAllSettledPromiseData, getProjectFile, getProjectJsonFile, getPromiseData, getSettledData, humpToChain, isLowerCase, isUpperCase, lowerFirstLetter, mapFields, sortAsc, sortDesc, upperFirstLetter, writeFile };

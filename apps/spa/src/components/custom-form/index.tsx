@@ -32,10 +32,10 @@ export type CustomFormItemType =
   | 'uploadImg'
 
 export interface CustomFormItem<T = any> extends FormItemProps<T> {
-  span?: ColProps['span']
   type: CustomFormItemType
   label: string
   name: string
+  span?: ColProps['span']
   placeholder?: string
   message?: string
   require?: boolean
