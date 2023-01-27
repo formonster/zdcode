@@ -9,9 +9,10 @@ import CustomForm, { CustomFormColumn } from '@/components/custom-form'
 export interface TableDataPopupProps extends PopupStateValue {
   tableName: string
   dataId?: number
+  retain?: string[]
   formData?: Record<string, any>
   onChange?: (formData: Record<string, any>) => void
-  onBeforeChange?: (formData: Record<string, any>) => boolean | Promise<boolean>
+  onBeforeChange?: (formData: Record<string, any>, oldFormData: Record<string, any>) => boolean | Promise<boolean>
 }
 
 const getFormType = (column: Column): CustomFormColumn => {
@@ -51,14 +52,14 @@ const getFormType = (column: Column): CustomFormColumn => {
 
 const TableData: FC = function () {
   const [popup, popupCtl] = usePopup('tableData')
-  const { visible, tableName, onBeforeChange, onChange, dataId } = popup
+  const { visible, tableName, onBeforeChange, onChange, dataId, retain = [] } = popup
 
   const tableColumns = useColumns(tableName)
   const columns: CustomFormColumn = tableColumns.data.map(getFormType) || []
 
   const formDataFetch = useFetch(async () => {
-    if (!dataId) return {}
     if (popup.formData) return popup.formData
+    if (!dataId) return {}
     const res = await get(tableName, {
       where: {
         id: dataId
@@ -78,10 +79,10 @@ const TableData: FC = function () {
   const onChangeData = async (data: any) => {
     let newData = data
     if (dataId) {
-      newData = diffDataRef.current?.diff(newData, ['id'])
+      newData = diffDataRef.current?.diff(newData, ['id', ...retain])
 
       if (onBeforeChange) {
-        const next = await onBeforeChange(newData)
+        const next = await onBeforeChange(newData, formDataFetch.data)
         if (!next) {
           popupCtl.hide()
           return
@@ -93,7 +94,7 @@ const TableData: FC = function () {
       })
     } else {
       if (onBeforeChange) {
-        const next = await onBeforeChange(data)
+        const next = await onBeforeChange(data, formDataFetch.data)
         if (!next) {
           popupCtl.hide()
           return
@@ -108,7 +109,7 @@ const TableData: FC = function () {
     if (onChange) onChange(newData)
     popupCtl.hide()
   }
-  
+
   return (
     <>
       <Modal

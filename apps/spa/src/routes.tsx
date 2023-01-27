@@ -12,7 +12,7 @@ function Redirect({ to }: { to: string }) {
 }
 
 const routes = createBrowserRouter([
-  { path: '/', element: createLazyComponent(() => import('@/pages/home')) },
+  { path: '/', element: <Redirect to="/tables" /> },
   {
     path: '/expenses',
     element: createLazyComponent(() => import('@/pages/expenses/expenses')),

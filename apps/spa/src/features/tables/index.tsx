@@ -5,7 +5,7 @@ import { SettingOutlined, ExclamationCircleFilled } from '@ant-design/icons'
 import { Button, Modal } from 'antd'
 import { usePopupCtl } from '@/features/popup/index.store'
 import useUrlState from '@ahooksjs/use-url-state'
-import { Table as TableType, useTables, useColumns, useData, createTable, createColumn, Column, removeTable, removeColumn, responseError, del } from '@zdcode/superdb'
+import { Table as TableType, useTables, useColumns, useData, createTable, createColumn, Column, removeTable, removeColumn, responseError, del, work, Work } from '@zdcode/superdb'
 import ColumnTitle, { Action } from './components/column-title'
 import './index.scss'
 
@@ -89,9 +89,43 @@ export default function Counter() {
           title: '修改列',
           tableName: 'table_column',
           dataId: id,
-          onChange: () => {
+          onBeforeChange: async (data, oldData) => {
+            if (!currentTable) return false
+
+            const name = data.name || oldData.name
+            const type = data.type || oldData.type
+            const length = data.length || oldData.length
+            const default_value = data.default_value || oldData.default_value
+
+            const works: Work[] = [
+              {
+                type: 'put',
+                table: 'table_column',
+                where: { id },
+                data
+              }
+            ]
+
+            // 如果修改了名称
+            if (data.name) {
+              works.push({
+                type: 'renameColumn',
+                tableName: currentTable.name,
+                columnName: oldData.name,
+                newColumnName: data.name
+              })
+            }
+            if (data.type || data.not_null || data.length || data.default_value) {
+              works.push({
+                type: 'updateColumn',
+                tableName: currentTable.name,
+                column: { ...data, name, type, length, default_value } as Column
+              })
+            }
+            await work(works)
             message.success('修改成功！')
             tableColumnsFetch.refresh()
+            return false
           }
         })
         break
@@ -217,11 +251,13 @@ export default function Counter() {
             <p>{currentTable?.name}</p>
             <Button type="text" shape="circle" icon={<SettingOutlined />} />
           </div>
-          {!currentTable?.is_original && <div className='space-x-2'>
-            <Button onClick={onAddColumn} type="primary">新增列</Button>
-            <Button onClick={onAddData} type="primary">新增数据</Button>
-            <Button onClick={onRemoveTable} type="primary" danger>删除表格</Button>
-          </div>}
+          {/* {!currentTable?.is_original && ( */}
+            <div className='space-x-2'>
+              <Button onClick={onAddColumn} type="primary">新增列</Button>
+              <Button onClick={onAddData} type="primary">新增数据</Button>
+              <Button onClick={onRemoveTable} type="primary" danger>删除表格</Button>
+            </div>
+          {/* )} */}
         </div>
 
         {/* 数据 */}

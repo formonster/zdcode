@@ -95,7 +95,7 @@ const presetTable: {
       },
       {
         name: 'not_null',
-        title: '是否允许为空',
+        title: '不允许为空',
         type: 'BOOLEAN',
       },
       {

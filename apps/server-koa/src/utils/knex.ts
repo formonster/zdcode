@@ -9,34 +9,41 @@ const mysql = knex({
   pool: { min: 0, max: 7 },
 })
 
-const createColumn = (table: Knex.CreateTableBuilder) => (column: Column) => {
-  const { type, name, length, default_value } = column
+const createColumn = (table: Knex.CreateTableBuilder, update: boolean = false) => (column: Column) => {
+  const { type, name, length, default_value, not_null } = column
+  let columnBuilder: Knex.ColumnBuilder | null = null
+
+  console.log('create column', name, type, length);
+  
   switch (type) {
     case 'RELATION':
-      table.integer(name, length || 11)
+      columnBuilder = table.integer(name, length || 11)
       break
     case 'INT':
-      table.integer(name, length || 11)
+      columnBuilder = table.integer(name, length || 11)
       break
     case 'UUID':
-      table.uuid(name)
+      columnBuilder = table.uuid(name)
       break
     case 'CHAR':
-      table.string(name, length || 255)
+      columnBuilder = table.string(name, length || 255)
       break
     case 'ENUM':
-      table.string(name, length || 255)
+      columnBuilder = table.string(name, length || 255)
       break
     case 'VARCHAR':
-      table.string(name, length || 255)
+      columnBuilder = table.string(name, length || 255)
       break
     case 'TEXT':
-      table.text(name)
+      columnBuilder = table.text(name)
       break
     case 'BOOLEAN':
-      table.boolean(name).defaultTo(default_value)
+      columnBuilder = table.boolean(name)
       break
   }
+  if (not_null) columnBuilder.notNullable()
+  if (default_value) columnBuilder.defaultTo(default_value)
+  if (update) columnBuilder.alter()
 }
 
 export const createTable = (
@@ -73,19 +80,19 @@ export const createColumns = (knex: Knex<any, unknown[]>, tableName: string, col
 }
 
 export const renameColumn = (knex: Knex<any, unknown[]>, tableName: string, columnName: string, newColumnName: string) => {
-  return getPromiseData(knex.schema.createTable(tableName, function (table) {
+  return getPromiseData(knex.schema.alterTable(tableName, function (table) {
     table.renameColumn(columnName, newColumnName);
   }))
 }
 
 export const updateColumn = (knex: Knex<any, unknown[]>, tableName: string, column: Column) => {
-  return getPromiseData(knex.schema.createTable(tableName, function (table) {
-    createColumn(table)(column)
+  return getPromiseData(knex.schema.alterTable(tableName, function (table) {
+    createColumn(table, true)(column)
   }))
 }
 
 export const removeColumn = (knex: Knex<any, unknown[]>, tableName: string, columnName: string) => {
-  return getPromiseData(knex.schema.createTable(tableName, function (table) {
+  return getPromiseData(knex.schema.alterTable(tableName, function (table) {
     table.dropColumn(columnName)
   }))
 }

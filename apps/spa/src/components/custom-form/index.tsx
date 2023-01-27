@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import {
   Input,
   Select,
@@ -21,6 +21,7 @@ import { UploadOutlined } from '@ant-design/icons'
 import { UploadListProps } from 'antd/lib/upload'
 import { Gutter } from 'antd/lib/grid/row'
 import { get, list } from '@zdcode/superdb'
+import { arr2Dic } from '@zdcode/utils'
 
 const { Option } = Select
 
@@ -125,7 +126,6 @@ const MySelect = ({ datas, enumId, relationTableId, relationTableColumnId, place
     const dataRes = await list(name, {
       columns: ['id', columnName]
     })
-    console.log('dataRes.data', name, dataRes.data);
     
     setMenuData(dataRes.data.map((dataItem) => ({
       name: dataItem[columnName],
@@ -196,11 +196,25 @@ const CustomForm: FC<CustomFormProps> = ({
     console.log('Failed:', errorInfo)
   }
 
+  const _defaultValue = useMemo(() => {
+    let res = { ...defaultValue }
+    const columnsDic = arr2Dic(columns, 'name')
+    columns.forEach(({ name }) => {
+      if (columnsDic[name].type === 'switch') {
+        res[name] = !!res[name]
+      }
+    })
+    return res
+  }, [defaultValue, columns])
+
+  console.log('columns', columns);
+  console.log('_defaultValue', _defaultValue);
+
   return (
     <Form
       name='basic'
       form={form}
-      initialValues={defaultValue}
+      initialValues={_defaultValue}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete='off'
