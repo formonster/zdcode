@@ -24,7 +24,7 @@ export const createTable = (name: string, title: string) => {
   ])
 }
 
-export const removeTable = (name: string) => {
+export const removeTable = (name: string, id: number) => {
   return work([
     {
       type: 'removeTable',
@@ -34,8 +34,15 @@ export const removeTable = (name: string) => {
       type: 'remove',
       table: 'tables',
       where: {
-        name
+        id
       }
-    }
+    },
+    {
+      type: 'del',
+      table: 'table_column',
+      where: {
+        table_id: id
+      }
+    },
   ])
 }

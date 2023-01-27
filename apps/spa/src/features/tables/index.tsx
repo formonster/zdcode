@@ -64,7 +64,7 @@ export default function Counter() {
       okType: 'danger',
       async onOk() {
         if (currentTable) {
-          const res = await removeTable(currentTable.name)
+          const res = await removeTable(currentTable.name, currentTable.id as number)
           if (responseError(res)) return
           message.success('删除成功！')
 
@@ -213,8 +213,9 @@ export default function Counter() {
         table_id: currentTable.id
       },
       onBeforeChange: async (data) => {
-        const res = await createColumn(currentTable.name, data)
+        const res = await createColumn(currentTable.name, data as Column)
         if (responseError(res)) return false
+        tableColumnsFetch.refresh()
         message.success('新增成功！')
         return false
       }

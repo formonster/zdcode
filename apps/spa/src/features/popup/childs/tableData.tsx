@@ -16,38 +16,41 @@ export interface TableDataPopupProps extends PopupStateValue {
 }
 
 const getFormType = (column: Column): CustomFormColumn => {
-  switch (column.type) {
-    case "CHAR":
-      return { type: 'input', label: column.title, name: column.name }
-    case "INT":
-      return { type: 'number', label: column.title, name: column.name }
-    case 'VARCHAR':
-      return { type: 'input', label: column.title, name: column.name }
-    case "BOOLEAN":
-      return { type: 'switch', label: column.title, name: column.name }
-    case 'RELATION':
-      return {
-        type: 'select',
-        label: column.title,
-        name: column.name,
-        // TODO 处理 relation_table_id & relation_table_column_id，加载对应的数据
-        selectProps: {
-          relationTableId: column.relation_table_id,
-          relationTableColumnId: column.relation_table_column_id,
-        },
-      }
-    case 'ENUM':
-      return {
-        type: 'select',
-        label: column.title,
-        name: column.name,
-        selectProps: {
-          enumId: column.enum_id,
-        },
-      }
-    default:
-      return { type: 'input', label: column.title, name: column.name }
+  let option = {
+    type: 'input',
+    label: column.title,
+    name: column.name,
+    require: !!column.not_null,
+    initialValue: column.default_value
   }
+  switch (column.type) {
+    case "INT":
+      // @ts-ignore
+      option.type = 'number' 
+      break
+    case "BOOLEAN":
+      // @ts-ignore
+      option.type = 'switch' 
+      break
+    case 'RELATION':
+      // @ts-ignore
+      option.type = 'select'
+      // @ts-ignore
+      option.selectProps = {
+        relationTableId: column.relation_table_id,
+        relationTableColumnId: column.relation_table_column_id,
+      }
+      break
+    case 'ENUM':
+      // @ts-ignore
+      option.type = 'select'
+      // @ts-ignore
+      option.selectProps = {
+        enumId: column.enum_id,
+      }
+      break
+  }
+  return option as unknown as CustomFormColumn
 }
 
 const TableData: FC = function () {
@@ -55,6 +58,7 @@ const TableData: FC = function () {
   const { visible, tableName, onBeforeChange, onChange, dataId, retain = [] } = popup
 
   const tableColumns = useColumns(tableName)
+  console.log('tableColumns', tableColumns)
   const columns: CustomFormColumn = tableColumns.data.map(getFormType) || []
 
   const formDataFetch = useFetch(async () => {

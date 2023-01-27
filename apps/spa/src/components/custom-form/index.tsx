@@ -39,7 +39,6 @@ export interface CustomFormItem<T = any> extends FormItemProps<T> {
   span?: ColProps['span']
   placeholder?: string
   message?: string
-  require?: boolean
   selectProps?: {
     datas:
       | { name: string; value: string | number }[]

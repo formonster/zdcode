@@ -14,6 +14,7 @@ const createColumn = (table: Knex.CreateTableBuilder, update: boolean = false) =
   let columnBuilder: Knex.ColumnBuilder | null = null
 
   console.log('create column', name, type, length);
+  if (!type) throw new Error('请设置字段类型！')
   
   switch (type) {
     case 'RELATION':

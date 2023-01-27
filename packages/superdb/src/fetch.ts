@@ -1,7 +1,7 @@
 import Fetch from '@zdcode/fetch'
 import { message } from '@zdcode/ui'
 
-const fetch = Fetch({ baseURL: ' http://localhost:4600' })
+const fetch = Fetch({ baseURL: ' http://localhost:4700' })
 
 export type Page = {
   current: number;

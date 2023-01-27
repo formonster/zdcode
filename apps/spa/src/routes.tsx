@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { createBrowserRouter, useNavigate } from 'react-router-dom'
 import createLazyComponent from './components/LazyComponent'
-import docsRoutes from './docs.routes'
 
 function Redirect({ to }: { to: string }) {
   let navigate = useNavigate()
@@ -24,11 +23,6 @@ const routes = createBrowserRouter([
   {
     path: '/invoices',
     element: createLazyComponent(() => import('@/pages/invoices')),
-  },
-  {
-    path: '/docs',
-    element: createLazyComponent(() => import('@/pages/docs')),
-    children: docsRoutes,
   },
   {
     path: '/',
