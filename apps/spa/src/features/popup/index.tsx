@@ -18,7 +18,7 @@ const Popup: FC<{}> = function () {
     <>
       {Object.entries(popups).map(([key, props], i) => {
         // @ts-ignore
-        return popups[key].load && popupsComponent[key as PopupKeys]
+        return popups[key].load && <div key={key}>{popupsComponent[key as PopupKeys]}</div>
       })}
     </>
   )
