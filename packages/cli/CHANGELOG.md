@@ -1,5 +1,14 @@
 # @zdcode/cli
 
+## 2.2.4
+
+### Patch Changes
+
+- 更新版本
+- Updated dependencies
+  - @zdcode/superdb@1.0.1
+  - @zdcode/utils@2.1.1
+
 ## 2.2.3
 
 ### Patch Changes

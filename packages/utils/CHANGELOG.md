@@ -1,5 +1,11 @@
 # @zdcode/utils
 
+## 2.1.1
+
+### Patch Changes
+
+- 更新版本
+
 ## 2.1.0
 
 ### Minor Changes

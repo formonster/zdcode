@@ -224,6 +224,26 @@ function lowerFirstLetter(str) {
 var humpToChain = (str) => {
   return str.split("").map((char) => isUpperCase(char) ? `-${char.toLowerCase()}` : char).join("");
 };
+
+// src/object.ts
+var record = (obj) => {
+  return {
+    diff: (newObj, retain) => {
+      let res = {};
+      if (retain)
+        retain.forEach((key) => res[key] = newObj[key]);
+      Object.entries(newObj).forEach(([key, value]) => {
+        if (obj[key] === value)
+          return;
+        res[key] = value;
+      });
+      return res;
+    },
+    done: () => {
+      obj = null;
+    }
+  };
+};
 export {
   arr2Dic,
   arr2DicDeep,
@@ -243,6 +263,7 @@ export {
   isUpperCase,
   lowerFirstLetter,
   mapFields,
+  record,
   sortAsc,
   sortDesc,
   upperFirstLetter,

@@ -43,4 +43,10 @@ declare function lowerFirstLetter(str: string): string;
  */
 declare const humpToChain: (str: string) => string;
 
-export { CreateDirOption, arr2Dic, arr2DicDeep, checkExist, createDir, createFile, deepMap, findFirstLeaf, flattenDeepByField, getAllSettledPromiseData, getProjectFile, getProjectJsonFile, getPromiseData, getSettledData, humpToChain, isLowerCase, isUpperCase, lowerFirstLetter, mapFields, sortAsc, sortDesc, upperFirstLetter, writeFile };
+type RecordCtl<T = Record<string, any>> = {
+    diff: <K extends keyof T>(newObj: T, retain?: K[]) => Partial<T>;
+    done: () => void;
+};
+declare const record: <T extends Record<string, any>>(obj: T) => RecordCtl<T>;
+
+export { CreateDirOption, RecordCtl, arr2Dic, arr2DicDeep, checkExist, createDir, createFile, deepMap, findFirstLeaf, flattenDeepByField, getAllSettledPromiseData, getProjectFile, getProjectJsonFile, getPromiseData, getSettledData, humpToChain, isLowerCase, isUpperCase, lowerFirstLetter, mapFields, record, sortAsc, sortDesc, upperFirstLetter, writeFile };

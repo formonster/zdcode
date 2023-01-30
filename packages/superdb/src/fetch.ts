@@ -1,7 +1,6 @@
 import Fetch from '@zdcode/fetch'
-import { message } from '@zdcode/ui'
 
-const fetch = Fetch({ baseURL: ' http://localhost:4700' })
+const fetchInstance = Fetch({ baseURL: ' http://localhost:4700' })
 
 export type Page = {
   current: number;
@@ -124,17 +123,16 @@ export type Work =
   | ({ type: 'del' } & DelProps)
   | ({ type: 'remove' } & DelProps)
 
-export const get = <T>(table: string, params?: GetProps) => fetch.post<Response<T>>(`/api/${table}/get`, params).then(res => res.data)
-export const list = <T>(table: string, params?: GetProps) => fetch.post<Response<T[]>>(`/api/${table}/list`, params).then(res => res.data)
-export const add = <T>(table: string, params?: AddProps) => fetch.post<Response<T>>(`/api/${table}/add`, params).then(res => res.data)
-export const put = <T>(table: string, params?: PutProps) => fetch.put<Response<T>>(`/api/${table}/put`, params).then(res => res.data)
-export const del = (table: string, params?: DelProps) => fetch.post<Response<Boolean>>(`/api/${table}/del`, params).then(res => res.data)
-export const remove = (table: string, params?: DelProps) => fetch.post<Response<Boolean>>(`/api/${table}/remove`, params).then(res => res.data)
-export const work = (works: Work[]) => fetch.post<Response<any>>('/api/base/work', works).then(res => res.data)
+export const get = <T>(table: string, params?: GetProps) => fetchInstance.post<Response<T>>(`/api/${table}/get`, params).then(res => res.data)
+export const list = <T>(table: string, params?: GetProps) => fetchInstance.post<Response<T[]>>(`/api/${table}/list`, params).then(res => res.data)
+export const add = <T>(table: string, params?: AddProps) => fetchInstance.post<Response<T>>(`/api/${table}/add`, params).then(res => res.data)
+export const put = <T>(table: string, params?: PutProps) => fetchInstance.put<Response<T>>(`/api/${table}/put`, params).then(res => res.data)
+export const del = (table: string, params?: DelProps) => fetchInstance.post<Response<Boolean>>(`/api/${table}/del`, params).then(res => res.data)
+export const remove = (table: string, params?: DelProps) => fetchInstance.post<Response<Boolean>>(`/api/${table}/remove`, params).then(res => res.data)
+export const work = (works: Work[]) => fetchInstance.post<Response<any>>('/api/base/work', works).then(res => res.data)
 
-export const responseError = (res: Response<any>, showMessage: boolean = true) => {
+export const responseError = (res: Response<any>) => {
   if (res.code !== 200) {
-    if (showMessage) message.error(res.message)
     return true
   }
   return false

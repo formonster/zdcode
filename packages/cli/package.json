@@ -1,8 +1,9 @@
 {
   "name": "@zdcode/cli",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "",
-  "main": "dist/index.mjs",
+  "type": "module",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch",
@@ -13,9 +14,8 @@
   "author": "",
   "license": "ISC",
   "bin": {
-    "tita": "./dist/index.mjs",
-    "zdcode": "./dist/index.mjs",
-    "zd": "./dist/index.mjs"
+    "zdcode": "./dist/index.js",
+    "zd": "./dist/index.js"
   },
   "files": [
     "dist"
@@ -24,14 +24,19 @@
     "registry": "http://43.143.167.128:4000/"
   },
   "dependencies": {
-    "@zdcode/template": "workspace:^2.2.2",
+    "@zdcode/superdb": "workspace:^1.0.1",
     "@zdcode/tsconfig": "workspace:^1.0.0",
+    "@zdcode/utils": "workspace:^2.1.1",
+    "chalk": "^5.2.0",
     "commander": "^9.4.1",
+    "inquirer": "^9.1.4",
     "lodash": "^4.17.21",
     "tsconfig": "^7.0.0",
-    "tsup": "^6.3.0"
+    "tsup": "^6.5.0",
+    "zx": "^7.1.1"
   },
   "devDependencies": {
+    "@types/inquirer": "^9.0.3",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.12",
     "typescript": "^4.9.4"
